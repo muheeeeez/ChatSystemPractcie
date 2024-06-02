@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginForm from "./components/LoginForm.vue";
 import RegisterForm from "./components/RegisterForm.vue";
 import ChatView from "./components/ChatView.vue";
+import ForgotPassword from "./components/ForgotPassword.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -9,7 +10,6 @@ const router = createRouter({
     {
       path: "/",
       redirect: "/login",
-   
     },
     {
       path: "/login",
@@ -24,6 +24,10 @@ const router = createRouter({
     {
       path: "/register",
       component: RegisterForm,
+    },
+    {
+      path: "/forgot-password",
+      component: ForgotPassword,
     },
   ],
 });

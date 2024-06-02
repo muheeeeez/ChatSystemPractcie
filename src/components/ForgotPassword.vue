@@ -1,101 +1,69 @@
 <template>
   <div class="view login">
-    <form class="login-form" @submit.prevent="signInUser">
+    <form class="login-form" @submit.prevent="resetPassword">
       <div class="form-inner">
-        <h1>Login to Smart Brains</h1>
-        <p v-if="errorMessage" class="error-message">
-          {{ errorMessage }}
+        <h1>Signup with Smart Brains</h1>
+        <p v-if="passwordIsWrong" class="wrong-password">
+          {{ state.wrongPassword }}
         </p>
-        <label for="username">Username</label>
-        <input
-          type="text"
-          v-model="state.username"
-          placeholder="Please enter your username"
-        />
+
         <label for="email">Email</label>
         <input
           type="email"
           v-model="state.email"
           placeholder="Enter your email"
         />
-        <label for="password">Password</label>
-        <input
-          type="password"
-          v-model="state.password"
-          placeholder="Enter your password"
-        />
+
         <div class="info">
           <p>
-            Don't have an account?
-            <span
-              ><router-link to="/register">Create Account</router-link>
-            </span>
-          </p>
-          <p>
-            <router-link to="/forgot-password">Forgot Password?</router-link>
+            Already have an account?
+            <span><router-link to="/login">Login</router-link> </span>
           </p>
         </div>
-        <input type="submit" value="Login" />
+        <input type="submit" value="Send Verification" />
       </div>
     </form>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import { ref, reactive } from "vue";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useRouter } from "vue-router";
-import ChatView from "./ChatView.vue";
-import { errorMessages } from "vue/compiler-sfc";
+
 export default {
-  components: { ChatView },
+
   setup() {
     const state = reactive({
-      username: "",
       email: "",
-      password: "",
     });
-    const errorMessage = ref("");
+    const passwordIsWrong = ref(false);
     const router = useRouter();
-    const signInUser = () => {
-      const username = state.username;
+    const resetPassword = () => {
       const email = state.email;
-      const password = state.password;
-      signInWithEmailAndPassword(getAuth(), email, password)
+      passwordIsWrong.value = false;
+      sendPasswordResetEmail(getAuth(), email)
         .then((data) => {
-          console.log("Successfully LoggedIn");
-          router.push({ name: "chat", params: { username } });
+          console.log("Reset Password Verfication Sent");
+          router.push("/login");
         })
         .catch((error) => {
           console.log(error.code);
-          switch (error.code) {
-            case "auth/invalid-email":
-              errorMessage.value = "Invalid email";
-              break;
-            case "auth/user-not-found":
-              errorMessage.value = "User not Found";
-              break;
-            case "auth/wrong-password":
-              errorMessage.value = "Incorrect Password";
-              break;
-            default:
-              errorMessage.value = "Email or Password was inocrrect";
-              break;
-          }
-          // alert(error.message);
+          alert(error.message);
+          passwordIsWrong.value = true;
         });
     };
 
     return {
       state,
-      signInUser,
-      errorMessage,
+      resetPassword,
+      passwordIsWrong,
     };
   },
 };
 </script>
-
-<style scoped>
+  
+  <style scoped>
 * {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -201,13 +169,11 @@ input[type="password"] ::placeholder {
   color: #666;
 }
 .info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
   margin: 15px;
-}
-.info a {
-  text-decoration: none;
+  color: #666;
 }
 .info a {
   text-decoration: none;
@@ -216,7 +182,7 @@ input[type="password"] ::placeholder {
 .info a:hover {
   color: #ea526f;
 }
-.error-message {
+.wrong-password {
   text-align: center;
   width: 70%;
   height: 40px;

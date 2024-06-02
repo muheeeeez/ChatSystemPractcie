@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import LoginForm from "./components/LoginForm.vue"
+// import LoginForm from "./components/LoginForm.vue"
 // import db from "./db";
 
 export default {
-  components: { LoginForm },
+  // components: { LoginForm },
 };
 </script>
 
