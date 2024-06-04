@@ -3,9 +3,9 @@
     <form class="login-form" @submit.prevent="resetPassword">
       <div class="form-inner">
         <h1>Signup with Smart Brains</h1>
-        <p v-if="passwordIsWrong" class="wrong-password">
+        <!-- <p v-if="passwordIsWrong" class="wrong-password">
           {{ state.wrongPassword }}
-        </p>
+        </p> -->
 
         <label for="email">Email</label>
         <input

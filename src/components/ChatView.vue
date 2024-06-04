@@ -67,10 +67,11 @@ export default {
     const inputMessage = ref("");
     const messages = ref([]);
     const replyMessages = ref([]);
-
     const sendMessage = () => {
+      playChatSound();
       if (inputMessage.value) {
         messages.value.push(inputMessage.value);
+
         replyMessages.value.push({
           imageLink: inputMessage.value,
           content: "",
@@ -79,7 +80,11 @@ export default {
         inputMessage.value = "";
       }
     };
-
+    const playChatSound = () => {
+      const audio = new Audio();
+      audio.src = "/src/audio/chat-sound.mp3";
+      audio.play();
+    };
     const calculateBox = (index) => {
       const imageElement = document.getElementById("inputImage" + index);
       if (!imageElement) {
@@ -97,14 +102,7 @@ export default {
       })
         .then((response) => response.json())
         .then((result) => {
-          if (
-            result.outputs &&
-            result.outputs[0] &&
-            result.outputs[0].data &&
-            result.outputs[0].data.regions &&
-            result.outputs[0].data.regions[0] &&
-            result.outputs[0].data.regions[0].region_info
-          ) {
+          if (result.outputs[0].data.regions[0].region_info) {
             const boundingBox =
               result.outputs[0].data.regions[0].region_info.bounding_box;
             const box = {
