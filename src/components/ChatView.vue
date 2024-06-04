@@ -26,7 +26,7 @@
             class="content"
             :id="'inputImage' + index"
             @load="() => calculateBox(index)"
-            :style="{ width: '501px' }"
+            :style="{ width: '500px' }"
           />
           <div
             v-if="replyMessage.box"
